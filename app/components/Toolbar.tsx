@@ -16,7 +16,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { text: 'Create Account', href: '/', primary: true },
+  { text: 'Create Account', href: '/join', primary: true },
   { text: 'Log In', href: '/login' },
 ];
 

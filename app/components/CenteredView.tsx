@@ -22,7 +22,7 @@ export function CenteredView(props: Props) {
       <div
         className={twMerge(
           'flex flex-col items-stretch',
-          'w-full md:w-[80%] print:md:w-full lg:w-[90%] print:lg:w-full',
+          'w-full md:w-[80%] lg:w-[90%] print:md:w-full print:lg:w-full',
           innerClassName,
         )}
         {...restOfInnerProps}

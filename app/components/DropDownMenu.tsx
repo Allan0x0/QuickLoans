@@ -31,19 +31,19 @@ const ADMIN_LINKS: [string, string, Icon][] = [
   [AppLinks.Lenders, 'Lenders', BuildingBank],
   [AppLinks.Admins, 'Admins', ShieldLock],
   [AppLinks.EmploymentTypes, 'Employment Types', Briefcase],
-] as const;
+];
 const LENDER_LINKS: [string, string, Icon][] = [
   [AppLinks.MyAccount, 'My Account', User],
   [AppLinks.Applications, 'Applications', Archive],
-] as const;
+];
 const APPLICANT_LINKS: [string, string, Icon][] = [
   [AppLinks.MyAccount, 'My Account', User],
   [AppLinks.Applications, 'Applications', Archive],
-] as const;
+];
 const IS_NOT_LOGGED_IN: [string, string, Icon][] = [
   [AppLinks.Login, 'Login', Login],
   [AppLinks.Login, 'Create Account', User],
-] as const;
+];
 
 export function DropDownMenu(props: Props) {
   const { isLoggedIn, kind, className, ...restOfProps } = props;

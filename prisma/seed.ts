@@ -65,45 +65,236 @@ async function seed() {
     applicantIds.push(id);
   }
 
-  const lenderIds: number[] = [];
-  for (const employmentTypeId of employmentTypeIds) {
-    for (let i = 0; i < 5; i++) {
-      const { id } = await prisma.lender.create({
-        data: {
-          user: {
-            create: {
-              emailAddress: faker.internet.email().toLowerCase().trim(),
-              hashedPassword: HASHED_PASSWORD,
-              fullName: faker.company.name(),
-              kind: UserType.Lender,
-            },
-          },
-          employmentPreferences: { create: { employmentTypeId } },
-          logo: '',
-          logoPublicId: 'h2bkwgii1e28hltu7f99',
-          logoWidth: 200,
-          logoHeight: 200,
-          minTenure: faker.number.int({ min: 1, max: 3 }),
-          maxTenure: faker.number.int({ min: 4, max: 12 }),
-          minAmount: faker.number.float({ max: 200, precision: 0.01 }),
-          maxAmount: faker.number.float({ max: 10_000, precision: 0.01 }),
-          monthlyInterest: faker.number.float({
-            min: 1,
-            max: 50,
-            precision: 0.01,
-          }),
-          adminFee: faker.number.float({ min: 1, max: 20, precision: 0.01 }),
-          applicationFee: faker.number.float({
-            min: 1,
-            max: 20,
-            precision: 0.01,
-          }),
-          paid: false,
-        },
-      });
-      lenderIds.push(id);
-    }
+  interface Lender {
+    name: string;
+    employmentTypeId: number;
+    minTenure: number;
+    maxTenure: number;
+    minAmount: number;
+    maxAmount: number;
+    monthlyInterest: number;
+    adminFee: number;
+    applicationFee: number;
   }
+  const lenders: Lender[] = [
+    {
+      name: 'Virl Financial Services',
+      employmentTypeId: employmentTypeIds[0],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 450,
+      maxAmount: 20000,
+      monthlyInterest: 6,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'Raysun Capital',
+      employmentTypeId: employmentTypeIds[1],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 500,
+      maxAmount: 10000,
+      monthlyInterest: 10,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'Easeworld Financial services',
+      employmentTypeId: employmentTypeIds[0],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 500,
+      maxAmount: 18000,
+      monthlyInterest: 4.26,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'Old Mutual Financial Services',
+      employmentTypeId: employmentTypeIds[2],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 500,
+      maxAmount: 20000,
+      monthlyInterest: 5,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: "Zimbabwe Women's Microfinance Bank",
+      employmentTypeId: employmentTypeIds[1],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 500,
+      maxAmount: 20000,
+      monthlyInterest: 5,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'InnBucks MicroBank',
+      employmentTypeId: employmentTypeIds[3],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 600,
+      maxAmount: 25000,
+      monthlyInterest: 8,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'GetBucks Microfinance Bank',
+      employmentTypeId: employmentTypeIds[2],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 400,
+      maxAmount: 20000,
+      monthlyInterest: 3,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'African Century Limited',
+      employmentTypeId: employmentTypeIds[3],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 400,
+      maxAmount: 18000,
+      monthlyInterest: 4,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'Success Microfinance Bank',
+      employmentTypeId: employmentTypeIds[1],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 500,
+      maxAmount: 30000,
+      monthlyInterest: 10,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'Empower Bank',
+      employmentTypeId: employmentTypeIds[1],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 600,
+      maxAmount: 18000,
+      monthlyInterest: 8,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'Lion Microfinance Bank',
+      employmentTypeId: employmentTypeIds[0],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 700,
+      maxAmount: 25000,
+      monthlyInterest: 5,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'Zimnat Microfinance',
+      employmentTypeId: employmentTypeIds[2],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 500,
+      maxAmount: 20000,
+      monthlyInterest: 4.5,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+    {
+      name: 'Zibuko Capital',
+      employmentTypeId: employmentTypeIds[2],
+      minTenure: 3,
+      maxTenure: 12,
+      minAmount: 500,
+      maxAmount: 20000,
+      monthlyInterest: 3,
+      adminFee: 3,
+      applicationFee: 0,
+    },
+  ];
+
+  console.log('Creating lenders....');
+  const lenderIds: number[] = [];
+  for (const lender of lenders) {
+    const { id } = await prisma.lender.create({
+      data: {
+        user: {
+          create: {
+            emailAddress: faker.internet.email().toLowerCase().trim(),
+            hashedPassword: HASHED_PASSWORD,
+            fullName: lender.name,
+            kind: UserType.Lender,
+          },
+        },
+        employmentPreferences: {
+          create: { employmentTypeId: lender.employmentTypeId },
+        },
+        logo: '',
+        logoPublicId: 'h2bkwgii1e28hltu7f99',
+        logoWidth: 200,
+        logoHeight: 200,
+        minTenure: lender.minTenure,
+        maxTenure: lender.maxTenure,
+        minAmount: lender.minAmount,
+        maxAmount: lender.maxAmount,
+        monthlyInterest: lender.monthlyInterest,
+        adminFee: lender.adminFee,
+        applicationFee: lender.applicationFee,
+        paid: false,
+      },
+    });
+    lenderIds.push(id);
+  }
+  console.log('Done creating lenders');
+
+  // const lenderIds: number[] = [];
+  // for (const employmentTypeId of employmentTypeIds) {
+  //   for (let i = 0; i < 5; i++) {
+  //     const { id } = await prisma.lender.create({
+  //       data: {
+  //         user: {
+  //           create: {
+  //             emailAddress: faker.internet.email().toLowerCase().trim(),
+  //             hashedPassword: HASHED_PASSWORD,
+  //             fullName: faker.company.name(),
+  //             kind: UserType.Lender,
+  //           },
+  //         },
+  //         employmentPreferences: { create: { employmentTypeId } },
+  //         logo: '',
+  //         logoPublicId: 'h2bkwgii1e28hltu7f99',
+  //         logoWidth: 200,
+  //         logoHeight: 200,
+  //         minTenure: faker.number.int({ min: 1, max: 3 }),
+  //         maxTenure: faker.number.int({ min: 4, max: 12 }),
+  //         minAmount: faker.number.float({ max: 200, precision: 0.01 }),
+  //         maxAmount: faker.number.float({ max: 10_000, precision: 0.01 }),
+  //         monthlyInterest: faker.number.float({
+  //           min: 1,
+  //           max: 50,
+  //           precision: 0.01,
+  //         }),
+  //         adminFee: faker.number.float({ min: 1, max: 20, precision: 0.01 }),
+  //         applicationFee: faker.number.float({
+  //           min: 1,
+  //           max: 20,
+  //           precision: 0.01,
+  //         }),
+  //         paid: false,
+  //       },
+  //     });
+  //     lenderIds.push(id);
+  //   }
+  // }
 
   function generatePhone() {
     return faker.helpers.fromRegExp('+26377#{7}');
